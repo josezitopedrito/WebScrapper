@@ -12,8 +12,17 @@ class TfIdf:
     def add_document(self, doc_name, list_of_words):
         # building a dictionary
         doc_dict = {}
+        title = 0
+        coef = 1
         for w in list_of_words:
-            doc_dict[w] = doc_dict.get(w, 0.) + 1.0
+            if(w == 'h2'):
+                if(title == 0):
+                    title = 1
+                    coef = 0.7
+                else:
+                    title = 0
+                    coef = 0.3
+            doc_dict[w] = doc_dict.get(w, 0.) * coef + 1.0
             self.corpus_dict[w] = self.corpus_dict.get(w, 0.0) + 1.0
 
         # normalizing the dictionary
@@ -47,7 +56,7 @@ list of words.
             for k in query_dict:
                 if k in doc_dict:
                     score += (query_dict[k] / self.corpus_dict[k]) + (
-                      doc_dict[k] / self.corpus_dict[k])
+                        doc_dict[k] / self.corpus_dict[k])
             sims.append([doc[0], score])
         sims.sort(reverse=True,key=getValue)
 
