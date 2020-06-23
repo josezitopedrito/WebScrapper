@@ -32,7 +32,12 @@ def menu():
                     table = TfIdf()
                     for i in filesA:
                         with open('artigos/{}'.format(i),'r') as content:
-                            table.add_document(i,re.sub(r'[\W]',' ',content.read()).split()) 
+                            #print(content.read().split('h2'))
+                            val = content.read().split('h2')
+                            firstVal = val[0]
+                            secondVal = val[1]
+                            table.add_document('title{}'.format(i),re.sub(r'[\W]',' ',firstVal).split()) 
+                            table.add_document('text{}'.format(i),re.sub(r'[\W]',' ',secondVal).split())
                     word += 1
                     print('Indique quantas palavras quer comparar:')
             elif(word == 1):
@@ -49,8 +54,23 @@ def menu():
                 print(narray)
                 fTDIDF = open('output' + narray[0] + '.html','w+')
                 fTDIDF.write('<h2>Resultados da aplicação do algoritmo:<h2>')
+                splitArray = {}
                 for s in table.similarities(narray):
-                    fTDIDF.write('<p><h5>' + s[0] + ' -> ' + str(s[1]) + '</h5></p>')
+                    if s[0].startswith('title'):
+                        s[0] = s[0].replace('title','')
+                        if s[0] in splitArray.keys():
+                            splitArray[s[0]] += s[1] * 0.7
+                        else:
+                            splitArray[s[0]] = s[1] * 0.7
+                    elif s[0].startswith('text'):
+                        s[0] = s[0].replace('text','')
+                        if s[0] in splitArray.keys():
+                            splitArray[s[0]] += s[1] * 0.3
+                        else:
+                            splitArray[s[0]] = s[1] * 0.3
+                    
+                for elem in splitArray.keys():
+                    fTDIDF.write('<p><h5>' + elem + ' -> ' + str(splitArray[elem]) + '</h5></p>')
 
                 new = 2 # open in a new tab, if possible
                 url = "file:///home/ze/SPLN/WebScraper/output" + narray[0] + ".html"
