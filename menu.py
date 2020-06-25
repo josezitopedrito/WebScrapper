@@ -36,8 +36,8 @@ def menu():
                             val = content.read().split('h2')
                             firstVal = val[0]
                             secondVal = val[1]
-                            table.add_document('title{}'.format(i),re.sub(r'[\W]',' ',firstVal).split()) 
-                            table.add_document('text{}'.format(i),re.sub(r'[\W]',' ',secondVal).split())
+                            table.add_document('title{}'.format(i),re.sub(r'[\W]',' ',firstVal).lower().split()) 
+                            table.add_document('text{}'.format(i),re.sub(r'[\W]',' ',secondVal).lower().split())
                     word += 1
                     print('Indique quantas palavras quer comparar:')
             elif(word == 1):
@@ -47,10 +47,10 @@ def menu():
                 else:
                     print('Digite um número maior que 1')
             elif(word > 1) and (word <= nword):
-                narray.append(line.replace("\n",""))
+                narray.append(line.replace("\n","").lower())
                 word += 1
             else:
-                narray.append(line.replace("\n",""))
+                narray.append(line.replace("\n","").lower())
                 print(narray)
                 fTDIDF = open('output' + narray[0] + '.html','w+')
                 fTDIDF.write('<h2>Resultados da aplicação do algoritmo:<h2>')

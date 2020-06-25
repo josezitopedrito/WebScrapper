@@ -56,17 +56,17 @@ list of words.
 
         return sims
 
-    def get_dic(self):
-        dic = {}
-        for i in range(len(self.documents)):
-            lista = []
-            for key, value in self.documents[i][1].items():
-                temp = [key,value]
-                lista.append(temp)
-            dic[self.documents[i][0]] = lista
-        for key in dic.keys():
-            dic[key].sort(reverse=True,key=getValue)
-        print(dic)
+    # def get_dic(self):
+    #     dic = {}
+    #     for i in range(len(self.documents)):
+    #         lista = []
+    #         for key, value in self.documents[i][1].items():
+    #             temp = [key,value]
+    #             lista.append(temp)
+    #         dic[self.documents[i][0]] = lista
+    #     for key in dic.keys():
+    #         dic[key].sort(reverse=True,key=getValue)
+    #     print(dic)
 
 def getValue(e):
     return e[1]
