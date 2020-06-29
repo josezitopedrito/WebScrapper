@@ -12,6 +12,7 @@ def menu():
     word = 0
     nword = 0
     narray = []
+    j = 0
     for line in fileinput.input():
         if line.replace("\n","") == "1":
             os.system('python3 web_scraper.py')
@@ -20,7 +21,7 @@ def menu():
             print("2 - Aplicar o algoritmo do TFIDF")
             print("3 - Sair")
         elif (line.replace("\n","") == "2") or (word > 0):
-            if word == 0:
+            if word == 0 and j == 0:
                 if(os.path.isdir("artigos") == False):
                     print('Necessita de gerar primeiro o conteúdo. Escolha a opção 1')
                     print("Que deseja fazer?")
@@ -40,48 +41,54 @@ def menu():
                             table.add_document('text{}'.format(i),re.sub(r'[\W]',' ',secondVal).lower().split())
                     word += 1
                     print('Indique quantas palavras quer comparar:')
-            elif(word == 1):
+            elif(word == 1) and (j == 0):
                 if(line.replace("\n","").isnumeric() and int(line) > 1):
                     nword = int(line)
                     word += 1
                 else:
                     print('Digite um número maior que 1')
-            elif(word > 1) and (word <= nword):
-                narray.append(line.replace("\n","").lower())
-                word += 1
+            elif(word > 1) and (word <= nword) and (j == 0):
+                if(line.replace("\n","") != ''):
+                    narray.append(line.replace("\n","").lower())
+                    word += 1
             else:
-                narray.append(line.replace("\n","").lower())
-                print(narray)
-                fTDIDF = open('output' + narray[0] + '.html','w+')
-                fTDIDF.write('<h2>Resultados da aplicação do algoritmo:<h2>')
-                splitArray = {}
-                for s in table.similarities(narray):
-                    if s[0].startswith('title'):
-                        s[0] = s[0].replace('title','')
-                        if s[0] in splitArray.keys():
-                            splitArray[s[0]] += s[1] * 0.7
-                        else:
-                            splitArray[s[0]] = s[1] * 0.7
-                    elif s[0].startswith('text'):
-                        s[0] = s[0].replace('text','')
-                        if s[0] in splitArray.keys():
-                            splitArray[s[0]] += s[1] * 0.3
-                        else:
-                            splitArray[s[0]] = s[1] * 0.3
-                    
-                for elem in splitArray.keys():
-                    fTDIDF.write('<p><h5>' + elem + ' -> ' + str(splitArray[elem]) + '</h5></p>')
+                j = 1
+                if(j == 1):
+                    if line.replace("\n","") != '':
+                        narray.append(line.replace("\n","").lower())
+                        j+=1
+                if(j == 2):
+                    print(narray)
+                    fTDIDF = open('output' + narray[0] + '.html','w+')
+                    fTDIDF.write('<h2>Resultados da aplicação do algoritmo:<h2>')
+                    splitArray = {}
+                    for s in table.similarities(narray):
+                        if s[0].startswith('title'):
+                            s[0] = s[0].replace('title','')
+                            if s[0] in splitArray.keys():
+                                splitArray[s[0]] += s[1] * 0.7
+                            else:
+                                splitArray[s[0]] = s[1] * 0.7
+                        elif s[0].startswith('text'):
+                            s[0] = s[0].replace('text','')
+                            if s[0] in splitArray.keys():
+                                splitArray[s[0]] += s[1] * 0.3
+                            else:
+                                splitArray[s[0]] = s[1] * 0.3
+                        
+                    for elem in splitArray.keys():
+                        fTDIDF.write('<p><h5><a href="artigos/{}" >'.format(elem) + elem + '</a> -> ' + str(splitArray[elem]) + '</h5></p>')
 
-                new = 2 # open in a new tab, if possible
-                url = "file:///home/ze/SPLN/WebScraper/output" + narray[0] + ".html"
-                webbrowser.open(url,new=new)
-                word = 0
-                nword = 0
-                narray = []
-                print("Que deseja fazer?")
-                print("1 - Consultar a informação do site do jornal ABola")
-                print("2 - Aplicar o algoritmo do TFIDF")
-                print("3 - Sair")
+                    new = 2 # open in a new tab, if possible
+                    url = "file:///home/ze/SPLN/WebScraper/output" + narray[0] + ".html"
+                    webbrowser.open(url,new=new)
+                    word = 0
+                    nword = 0
+                    narray = []
+                    print("Que deseja fazer?")
+                    print("1 - Consultar a informação do site do jornal ABola")
+                    print("2 - Aplicar o algoritmo do TFIDF")
+                    print("3 - Sair")
         elif (line.replace("\n","") == "3") and (word == 0):
             print("Obrigado pela sua visita")
             fileinput.close()

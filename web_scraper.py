@@ -106,7 +106,7 @@ def mainPage(file,array,title):
         link_slide = 'https://www.abola.pt' + inset['href']
         #TÍTULO DESTE HEADLINE
         infos = inset.find_all('span')
-        file.write('<h3>Notícia ' + str(i) + ': <a href="../artigos/' + infos[0].text.replace("/"," ").replace(':'," ") + '.html">')
+        file.write('<h3>Notícia ' + str(i) + ': <a href="../artigos/' + infos[0].text.replace("/"," ") + '.html">')
         n = 0
         for info in infos:
             file.write(info.text + " ")
